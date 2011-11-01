@@ -1,3 +1,7 @@
+require '/Users/k_nori-yagi/NetBeansProjects/Refactoring/lib/Part1/RegularPrice'
+require '/Users/k_nori-yagi/NetBeansProjects/Refactoring/lib/Part1/NewReleasePrice'
+require '/Users/k_nori-yagi/NetBeansProjects/Refactoring/lib/Part1/ChildrensPrice'
+
 class Movie
   REGULAR = 0
   NEW_RELEASE = 1
@@ -6,24 +10,22 @@ class Movie
   attr_reader :title
   attr_accessor :price_code
 
-  def initialize(title, price_code)
-    @title, @price_code = title, price_code
+  def initialize(title, the_price_code)
+    @title, self.price_code = title, the_price_code
   end
 
-  def charge(days_rented)
-   result = 0
-  #各行の金額を計算
-    case price_code
-    when REGULAR
-      result += 2
-      result += (days_rented - 2) * 1.5 if days_rented > 2
-    when NEW_RELEASE
-      result += days_rented * 3
-    when CHILDRENS
-      result += 1.5
-      result += (days_rented - 3) * 1.5 if days_rented > 3
+  def price_code=(value)
+    @price_code = value
+    @price = case price_code
+    when REGULAR then RegularPrice.new
+    when NEW_RELEASE then NewReleasePrice.new
+    when CHILDRENS then ChildrensPrice.new
     end
-    result  #結果を呼出し元に返す。→変更前と同じ動きにする！
+  end
+
+  #委譲メソッドになった。
+  def charge(days_rented)
+    @price.charge(days_rented)
   end
 
   def frequent_renter_points(days_rented)
