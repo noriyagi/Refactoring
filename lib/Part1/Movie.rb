@@ -7,21 +7,21 @@ class Movie
   NEW_RELEASE = 1
   CHILDRENS = 2
 
-  attr_reader :title
+  attr_reader :title, :price
   attr_accessor :price_code
 
   def initialize(title, the_price_code)
     @title, self.price_code = title, the_price_code
   end
 
-  def price_code=(value)
-    @price_code = value
-    @price = case price_code
-    when REGULAR then RegularPrice.new
-    when NEW_RELEASE then NewReleasePrice.new
-    when CHILDRENS then ChildrensPrice.new
-    end
-  end
+#  def price_code=(value)
+#    @price_code = value
+#    @price = case price_code
+#    when REGULAR then RegularPrice.new
+#    when NEW_RELEASE then NewReleasePrice.new
+#    when CHILDRENS then ChildrensPrice.new
+#    end
+#  end
 
   #委譲メソッドになった。
   def charge(days_rented)
@@ -29,7 +29,6 @@ class Movie
   end
 
   def frequent_renter_points(days_rented)
-    #新作２日間レンタルでボーナスポイントを加算
-    (price_code == NEW_RELEASE && days_rented > 1) ? 2 : 1
+   @price.frequent_renter_points(days_rented)
   end
 end
